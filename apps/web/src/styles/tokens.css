@@ -1,0 +1,72 @@
+/*
+ * Design tokens — extracted from DESIGN-TOKENS.md in the build kit.
+ * Source of truth: claude-design-output.html.
+ *
+ * Do not hardcode hex values elsewhere. Add a new token here first.
+ */
+
+:root {
+  /* Primary ink — deep navy. Used as text, never as a body background. */
+  --ink: #060644;
+  --ink-80: rgba(6, 6, 68, 0.8);
+  --ink-60: rgba(6, 6, 68, 0.6);
+
+  /* Greys */
+  --graphite: #545454;
+  --slate: #6b7280;
+  --mist: #e5e7eb;
+  --mist-soft: #f3f4f6;
+  --mist-softer: #fafafb;
+
+  /* Surfaces */
+  --white: #ffffff;
+  --cream: #f0eee9; /* body background — warm off-white */
+
+  /* Primary accent — burnt orange */
+  --orange: #c2410c;
+  --orange-soft: rgba(194, 65, 12, 0.08);
+
+  /* Semantic — info */
+  --info-bg: #eef2ff;
+  --info-border: #c7d2fe;
+  --info-text: #3730a3;
+
+  /* Semantic — purple (adaptive depth callout) */
+  --purple-bg: #f5f3ff;
+  --purple-border: #7c3aed;
+  --purple-text: #5b21b6;
+
+  /* Semantic — amber (custom recon callout) */
+  --amber-bg: #fef3c7;
+  --amber-border: #d97706;
+  --amber-text: #92400e;
+
+  /* Semantic — green (yes / available) */
+  --green-bg: #ecfdf5;
+  --green-text: #065f46;
+
+  /* Semantic — red (no / not available) */
+  --red-bg: #fef2f2;
+  --red-text: #991b1b;
+
+  /* Type */
+  --font-sans: "Inter", system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  /* Radii */
+  --radius-chip: 6px;
+  --radius-card: 12px;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* Layout */
+  --content-max-width: 680px;
+}

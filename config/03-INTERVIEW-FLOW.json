@@ -1,0 +1,375 @@
+{
+  "version": "1.0.0",
+  "voice": {
+    "no_em_dashes": true,
+    "south_african_english": true,
+    "banned_words": ["genuinely", "honestly", "straightforward"],
+    "no_emoji": true,
+    "no_marketing_language": true,
+    "tone": "Direct and conversational. Like a smart consultant who has done this many times. Sentence case. Brief acknowledgments only."
+  },
+  "categories": [
+    {
+      "id": "cost",
+      "title": "Cost",
+      "desc": "Where the people money goes. Salaries, benefits, overtime, training, recruitment. Lets you defend or challenge people-related spend."
+    },
+    {
+      "id": "risk",
+      "title": "Risk",
+      "desc": "What's likely to break. Turnover patterns, absenteeism, leave liability, vacancies, disciplinary signals. Early warnings before they cost you."
+    },
+    {
+      "id": "performance",
+      "title": "Performance",
+      "desc": "How well the workforce performs. Internal promotions, span of control, skills gaps, underperformance signals. The lever you pull when you want to shift output."
+    },
+    {
+      "id": "culture",
+      "title": "Culture",
+      "desc": "How people feel and what it predicts. Engagement scores, sub-dimensions, the link between culture and business outcomes. The deepest leading indicator."
+    },
+    {
+      "id": "governance",
+      "title": "Governance",
+      "desc": "Compliance and equity. Pay equity, B-BBEE, EE, diversity. The metrics auditors and the board ask about, and that you'd rather not be surprised by."
+    }
+  ],
+  "calibration": {
+    "target_per_rank": [8, 4, 2, 1, 0],
+    "tier_priority_order": ["Basic", "Intermediate", "Advanced"],
+    "notes": "Position 0 in array = rank 1 (most important). Position 4 = rank 5 (lowest, skipped). When category size is smaller than target, cap at category size."
+  },
+  "adaptive_depth": {
+    "trigger_min_rank": 3,
+    "expansion_count": 2,
+    "max_expansions_per_category": 1,
+    "callout_template": "Quick check — you ranked {{category}} at #{{rank}} but you've now flagged {{count}} of its metric(s) as Top tier. Want me to add a couple more {{category}} questions to the queue, or stick with the original plan?",
+    "add_more_chip": "Add more from {{category}}",
+    "stick_chip": "Stick with the plan"
+  },
+  "answer_options_part_5_tiers": [
+    { "val": "top", "label": "Top tier — would build the dashboard around this" },
+    { "val": "second", "label": "Useful but second tier" },
+    { "val": "nice", "label": "Nice to glance at occasionally" },
+    { "val": "already", "label": "Already covered elsewhere" },
+    { "val": "no", "label": "Not relevant for us" }
+  ],
+  "answer_options_part_6_data": [
+    { "val": "yes", "label": "Yes, available" },
+    { "val": "partial", "label": "Partially / messy" },
+    { "val": "no", "label": "No / not in any system" },
+    { "val": "unsure", "label": "Not sure if our system can do this" },
+    { "val": "unsure_system", "label": "Not sure where it lives" }
+  ],
+  "tier_followup_behaviour": {
+    "top": "Granularity multi-select follow-up",
+    "second": "Granularity multi-select follow-up",
+    "nice": "Acknowledgment then advance: 'Got it. We'll keep this one in the wider list but it won't drive data discovery.'",
+    "already": "Source-system multi-select follow-up: 'Which system shows this to you today? Pick all that apply.'",
+    "no": "Acknowledgment then advance: 'Understood. We'll keep this out of scope and not chase the data for it.'"
+  },
+  "data_answer_followup_behaviour": {
+    "yes": "Advance immediately, no note prompt",
+    "no": "Advance immediately, no note prompt",
+    "partial": "Optional note: 'Anything to add? What's messy, or which custom recon do you use to fix it?'",
+    "unsure": "Optional note: 'Anything to note? Who would you need to check with to confirm?'",
+    "unsure_system": "Optional note: 'Where might it live? Even a hunch helps. Could be in a custom recon or a system you didn't think to mention.'"
+  },
+  "transition_card_recap_template": "Picking up: {{recap_line}}",
+  "completion_message": "Thanks, that's everything we need. Your full report will be with the HR Insights Co. team for review and they'll send it through to you within 24 hours.",
+  "parts": [
+    {
+      "id": "context",
+      "number": 1,
+      "title": "Business context & systems",
+      "type": "generic",
+      "intro": "Quick context first. We use this to personalise everything that follows — the metric storylines later, the data questions, the report.",
+      "questions": [
+        {
+          "id": "business_type",
+          "type": "single_with_other",
+          "prompt": "What kind of business is this?",
+          "options": [
+            "Hospitality (lodge / hotel / restaurant)",
+            "Professional services",
+            "Healthcare",
+            "Retail",
+            "Manufacturing",
+            "Financial services",
+            "Other"
+          ],
+          "other_prompt": "Quick description of your business?"
+        },
+        {
+          "id": "headcount",
+          "type": "single",
+          "prompt": "Roughly how many employees?",
+          "options": ["Under 50", "50 to 200", "200 to 1,000", "1,000 to 5,000", "5,000+"]
+        },
+        {
+          "id": "locations",
+          "type": "single",
+          "prompt": "How many sites or locations?",
+          "options": ["1", "2 to 5", "6 to 20", "20+"]
+        },
+        {
+          "id": "payroll",
+          "type": "multi_with_other",
+          "prompt": "Which payroll system(s) do you use?",
+          "helper": "Multi-select. Pick everything that applies — some businesses run more than one.",
+          "options": [
+            "Sage 300 People",
+            "PaySpace",
+            "SimplePay",
+            "Sage Pastel Payroll",
+            "VIP",
+            "Other"
+          ],
+          "other_prompt": "Which other payroll system(s)?"
+        },
+        {
+          "id": "other_systems",
+          "type": "multi_with_other",
+          "prompt": "Which other people systems do you use?",
+          "helper": "Multi-select.",
+          "options": [
+            "Separate HRIS",
+            "Recruitment ATS",
+            "LMS or training records system",
+            "Engagement survey tool (Culture Amp, Officevibe, Viva)",
+            "Performance management system",
+            "Time & attendance (Uniclox, Jarrison, etc)",
+            "Rostering system",
+            "None separate from payroll",
+            "Other"
+          ],
+          "other_prompt": "Which other system(s)?"
+        },
+        {
+          "id": "custom_reports",
+          "type": "multi_with_other",
+          "prompt": "Do you prepare any custom reports or reconciliations we should treat as data sources?",
+          "helper": "Multi-select. Manual workbooks and reports often hold data that isn't in any single system — we want to use them rather than re-derive.",
+          "options": [
+            "Payroll reconciliation",
+            "Headcount / movement report",
+            "Exit / leaver log",
+            "Vacancy tracker",
+            "Cost / GL allocation report",
+            "Training register",
+            "None",
+            "Other"
+          ],
+          "other_prompt": "Quick description of the other report(s)?"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "number": 2,
+      "title": "Data handling",
+      "type": "generic",
+      "intro": "How your data lives, and how we'd work with it.",
+      "questions": [
+        {
+          "id": "access_pref",
+          "type": "single",
+          "prompt": "How would you prefer us to access your HR data?",
+          "options": [
+            "Direct system access (treat us as internal staff)",
+            "Scheduled CSV / Excel exports you send us",
+            "API integration",
+            "Manual file share each time",
+            "Discuss in person"
+          ]
+        },
+        {
+          "id": "work_location",
+          "type": "single",
+          "prompt": "Where should the work live?",
+          "options": [
+            "On your SharePoint or Drive (data stays in your environment)",
+            "In our cloud solution",
+            "Hybrid",
+            "Discuss in person"
+          ]
+        },
+        {
+          "id": "cleanup",
+          "type": "single_with_note",
+          "prompt": "Is there source data that needs significant cleanup?",
+          "options": [
+            "Yes, substantial cleanup needed",
+            "Yes, some cleanup",
+            "Minimal cleanup",
+            "Not sure"
+          ],
+          "note_on": ["Yes, substantial cleanup needed", "Yes, some cleanup"],
+          "note_prompt": "Quick note on what's messy?"
+        },
+        {
+          "id": "cleanup_owner",
+          "type": "single",
+          "prompt": "If cleanup is needed, do you want us to handle it or do it in-house first?",
+          "options": [
+            "You handle cleanup",
+            "We'll clean and hand you cleaned data",
+            "Discuss in person"
+          ]
+        },
+        {
+          "id": "governance",
+          "type": "single",
+          "prompt": "Any POPIA, data residency, or governance constraints?",
+          "options": [
+            "Yes, critical (data must stay in SA, no foreign cloud)",
+            "Some considerations",
+            "Not sure",
+            "No"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "granularity",
+      "number": 3,
+      "title": "Insight context",
+      "type": "generic",
+      "intro": "Populations and time horizon. We'll capture the level of granularity per metric in Part 5 — this section is the strategic context around it.",
+      "questions": [
+        {
+          "id": "populations",
+          "type": "multi",
+          "prompt": "Which populations concern you most right now?",
+          "helper": "Multi-select.",
+          "options": [
+            "Frontline staff",
+            "High performers",
+            "New joiners",
+            "Scarce or critical skills",
+            "Leadership",
+            "Specific demographic groups",
+            "Whole workforce",
+            "None specifically"
+          ]
+        },
+        {
+          "id": "shifts",
+          "type": "multi",
+          "prompt": "Recent shifts in the business worth flagging?",
+          "helper": "Multi-select.",
+          "options": [
+            "Restructure",
+            "Growth spike",
+            "Turnover spike",
+            "M&A activity",
+            "System migration",
+            "Culture concerns",
+            "None worth flagging"
+          ]
+        },
+        {
+          "id": "time_focus",
+          "type": "single",
+          "prompt": "When you think about metrics, which do you need more — backwards reporting or forward-looking planning?",
+          "options": [
+            "Mostly backward (reporting on what happened)",
+            "Even mix of both",
+            "Significant forward-looking (rostering, planning, what-if)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "users",
+      "number": 4,
+      "title": "Output consumers",
+      "type": "generic",
+      "intro": "Who's going to use these insights, and how often.",
+      "questions": [
+        {
+          "id": "audiences",
+          "type": "multi_with_other",
+          "prompt": "Who needs to see these metrics?",
+          "helper": "Multi-select.",
+          "options": [
+            "Board",
+            "CEO / Exec team",
+            "CHRO / HR Director",
+            "HR Business Partners",
+            "Line managers",
+            "Site or property managers",
+            "Finance team",
+            "Other"
+          ],
+          "other_prompt": "Who else?"
+        },
+        {
+          "id": "restrictions",
+          "type": "single_with_note",
+          "prompt": "Are there metrics that should be restricted to certain audiences?",
+          "options": [
+            "Yes, restrictions needed",
+            "No, open access",
+            "Discuss in person"
+          ],
+          "note_on": ["Yes, restrictions needed"],
+          "note_prompt": "Quick note on what should be restricted?"
+        },
+        {
+          "id": "format",
+          "type": "multi",
+          "prompt": "Preferred output format?",
+          "helper": "Multi-select.",
+          "options": [
+            "Live dashboard",
+            "Written report",
+            "Meeting-ready pack",
+            "Ad-hoc query access"
+          ]
+        },
+        {
+          "id": "cadence",
+          "type": "single",
+          "prompt": "How often do you want updated insights?",
+          "options": ["Weekly", "Monthly", "Quarterly"]
+        }
+      ]
+    },
+    {
+      "id": "insights",
+      "number": 5,
+      "title": "Metrics that matter",
+      "type": "ranking_and_storytelling",
+      "intro": "Two phases. First we'll prioritise the metric categories so we can focus interview time well. Then we'll walk through the metrics that earn the time.",
+      "ranking_intro": "Before we walk through metrics, let's prioritise. Drag the categories below into priority order — top is most important to you, bottom is least.",
+      "ranking_helper": "Drag and drop to reorder.",
+      "rank_confirm_button": "Confirm ranking",
+      "ack_message": "Got it. I'll focus the storytelling around your ranking — most time on what matters most. Ready to start?",
+      "ack_start_button": "Start storytelling",
+      "ack_rebalance_button": "Rebalance the ranking",
+      "storytelling_metric_source": "metric_library_mcp",
+      "storytelling_context_template": "Metric {{i}} of {{n}} • {{category}} • {{tier}} tier • ranked #{{rank}}",
+      "tier_chips": "answer_options_part_5_tiers",
+      "granularity_followup_prompt": "Where would this matter most for you? Pick all that apply.",
+      "nice_acknowledgment": "Got it. We'll keep this one in the wider list but it won't drive data discovery.",
+      "no_acknowledgment": "Understood. We'll keep this out of scope and not chase the data for it.",
+      "already_followup_prompt": "Which system shows this to you today? Pick all that apply.",
+      "adaptive_depth_inline": true
+    },
+    {
+      "id": "data_discovery",
+      "number": 6,
+      "title": "Data availability",
+      "type": "data_discovery",
+      "intro": "Specific data questions for the metrics you flagged Top tier or Second tier. I've made my best guess at which system holds each data point — flag if I've guessed wrong, if you'd rather we use one of your custom recons, or if you're not sure where it lives.",
+      "intro_with_recons_template": "Heads-up: you mentioned {{n}} custom report{{s}} — {{recon_list}}. For any question below where one of these is the better source than the system, just say so in the note and we'll route the data through it.",
+      "data_question_source": "metric_library_mcp",
+      "answer_chips": "answer_options_part_6_data",
+      "dedup_strategy": "by_data_point_and_granularity_tuple",
+      "feeds_line_template": "Feeds: {{metric_names}}",
+      "personalisation_placeholders": ["{{payroll}}", "{{business_type}}", "{{custom_reports}}"]
+    }
+  ]
+}
