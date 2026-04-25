@@ -35,27 +35,50 @@ export async function buildServer(): Promise<FastifyInstance> {
    * table doesn't exist yet, `db: "error"` on any other failure.
    */
   app.get("/health/db", async () => {
-    const { error } = await supabase.from("sessions").select("id").limit(1);
+    try {
+      const { error } = await supabase.from("sessions").select("id").limit(1);
 
-    if (!error) {
-      return { status: "ok", db: "ok", time: new Date().toISOString() };
+      if (!error) {
+        return { status: "ok", db: "ok", time: new Date().toISOString() };
+      }
+
+      const missingTable =
+        error.code === "42P01" ||
+        error.code === "PGRST205" ||
+        /relation .* does not exist/i.test(error.message) ||
+        /Could not find the table/i.test(error.message);
+
+      return {
+        status: "degraded",
+        db: missingTable ? "missing" : "error",
+        detail: error.message,
+        code: error.code,
+        hint: missingTable
+          ? "Run apps/api/src/db/migrations/0001_initial_schema.sql in the Supabase SQL editor."
+          : undefined,
+        time: new Date().toISOString(),
+      };
+    } catch (e) {
+      const err = e as Error & { cause?: unknown };
+      const cause = err.cause as
+        | { code?: string; errno?: string; hostname?: string; message?: string }
+        | undefined;
+      return {
+        status: "degraded",
+        db: "error",
+        detail: err.message,
+        cause: cause
+          ? {
+              code: cause.code,
+              errno: cause.errno,
+              hostname: cause.hostname,
+              message: cause.message,
+            }
+          : String(err.cause ?? "no cause"),
+        configured_url: env.SUPABASE_URL,
+        time: new Date().toISOString(),
+      };
     }
-
-    const missingTable =
-      error.code === "42P01" ||
-      error.code === "PGRST205" ||
-      /relation .* does not exist/i.test(error.message) ||
-      /Could not find the table/i.test(error.message);
-
-    return {
-      status: "degraded",
-      db: missingTable ? "missing" : "error",
-      detail: error.message,
-      hint: missingTable
-        ? "Run apps/api/src/db/migrations/0001_initial_schema.sql in the Supabase SQL editor."
-        : undefined,
-      time: new Date().toISOString(),
-    };
   });
 
   // Endpoint stubs arrive in Phase 3.
